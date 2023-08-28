@@ -1,48 +1,24 @@
 package main
 
 import (
-	"context"
+	"client-admin/api"
+	db "client-admin/pkg/database"
 	"fmt"
 	"log"
-	"os"
-
-	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
 
-	client, err := connectToMongoDB()
+	_, err := db.ConnectToPostgres()
 	if err != nil {
-		fmt.Println("Error:", err)
+		// TODO Error log need to done
+		log.Fatal(err)
 		return
 	}
-	defer client.Disconnect(context.Background())
 
-	// Now you can perform operations with the MongoDB client
-}
+	api := api.RegisterRoutes()
+	fmt.Println("hello jawan")
+	//start server
+	api.Run(":8000")
 
-func connectToMongoDB() (*mongo.Client, error) {
-	// Set client options
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_URL"))
-
-	// Connect to MongoDB
-	client, err := mongo.Connect(context.Background(), clientOptions)
-	if err != nil {
-		return nil, err
-	}
-
-	// Check the connection
-	err = client.Ping(context.Background(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println("Connected to MongoDB successfully!")
-	return client, nil
 }
