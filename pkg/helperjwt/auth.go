@@ -13,13 +13,10 @@ import (
 var jwtKey = []byte("supersecretkey")
 
 // Generate JWT Token
-func GenerateJWT(name string, email string, role string, id string) (tokenString string, err error) {
+func GenerateJWT(email string) (tokenString string, err error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := models.JWTClaim{
 		EmailID: email,
-		Name:    name,
-		Id:      id,
-		Role:    role,
 
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
@@ -69,6 +66,13 @@ func CheckPassword(providedPassword string, user models.Users) error {
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(providedPassword))
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func CheckPasswordWitoutHash(providedPassword string, password string) error {
+	if password != providedPassword {
+		return errors.New("password not valid")
 	}
 	return nil
 }

@@ -1,24 +1,25 @@
 package main
 
 import (
-	"client-admin/api"
-	db "client-admin/pkg/database"
-	"fmt"
+	"client-admin/pkg/helperdb"
+	"client-admin/router"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	_, err := db.ConnectToPostgres()
+	db, err := helperdb.ConnectToPostgres()
 	if err != nil {
 		// TODO Error log need to done
 		log.Fatal(err)
 		return
 	}
+	defer db.Close()
 
-	api := api.RegisterRoutes()
-	fmt.Println("hello jawan")
-	//start server
-	api.Run(":8000")
+	r := gin.New()
+	router.RegisterRoutes(r)
 
+	r.Run(":8000")
 }
