@@ -33,8 +33,8 @@ func RegisterRoutes(r *gin.Engine) {
 	})
 
 	v1.GET("/health", controller.GetToken)
-	r.POST("/singup", controller.CreateUser)
-	r.POST("/login", controller.LoginUser)
+	v1.POST("/singup", controller.CreateUser)
+	v1.POST("/login", controller.LoginUser)
 
 	r.POST("/addclient", controller.Addclient)
 	r.DELETE("/client/:id", controller.DeleteClient)
