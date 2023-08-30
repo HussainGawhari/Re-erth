@@ -39,7 +39,7 @@ type Login struct {
 type JWTClaim struct {
 	Name    string `json:"name"`
 	EmailID string `json:"emailID"`
-	Id      string `bson:"_id" json:"userID"`
-	Role    string `bson:"role" json:"role"`
+	Id      string `json:"_id"`
+	Role    string `json:"role"`
 	jwt.StandardClaims
 }

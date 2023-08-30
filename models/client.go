@@ -19,6 +19,21 @@ type Clients struct {
 	UpdatedAt  *time.Time `json:"updated_at"`
 }
 
+type GetClientBy struct {
+	ID         int        `json:"id"`
+	FirstName  string     `json:"first_name"`
+	LastName   string     `json:"last_name"`
+	Telephone  string     `json:"telephone"`
+	Email      string     `json:"email"`
+	Status     bool       `json:"status"`
+	Street     string     `json:"street"`
+	PostalCode string     `json:"postal_code"`
+	City       string     `json:"city"`
+	Country    string     `json:"country"`
+	CreatedAt  time.Time  `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
+}
+
 // type Address struct {
 // 	Street     string `json:"street" validate:"required"`
 // 	PostalCode string `json:"postal_code" validate:"required"`
