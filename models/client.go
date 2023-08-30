@@ -4,36 +4,24 @@ import (
 	"time"
 )
 
-type Client struct {
-	// ID primitive.ObjectID `bson:"_id" json:"ID" `
-	// UserID primitive.ObjectID `bson:"userID" json:"userID"`
-	ID        int    `json:"firstName"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Telephone string `json:"telephone"`
-	Email     string `json:"email"`
-	Address   Address
-	IsActive  bool       `json:"isActive"`
-	CreatedAt time.Time  `bson:"createdAt" json:"-"`
-	UpdatedAt *time.Time `bson:"updatedAt" json:"-"`
+type Clients struct {
+	ID         int        `json:"id" validate:"required"`
+	FirstName  string     `json:"first_name" validate:"required"`
+	LastName   string     `json:"last_name" validate:"required"`
+	Telephone  string     `json:"telephone" validate:"required"`
+	Email      string     `json:"email" validate:"required,email"`
+	Status     bool       `json:"status"`
+	Street     string     `json:"street" validate:"required"`
+	PostalCode string     `json:"postal_code" validate:"required"`
+	City       string     `json:"city" validate:"required"`
+	Country    string     `json:"country" validate:"required"`
+	CreatedAt  time.Time  `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
 }
 
-type Address struct {
-	Street     string `json:"street"`
-	PostalCode string `json:"postalCode"`
-	City       string `json:"city"`
-	Country    string `json:"country"`
-}
-
-// type User struct {
-// 	ID       int    `json:"id"`
-// 	Username string `json:"username"`
-// 	Password string `json:"-"`
-// 	Role     string `json:"role"`
+// type Address struct {
+// 	Street     string `json:"street" validate:"required"`
+// 	PostalCode string `json:"postal_code" validate:"required"`
+// 	City       string `json:"city" validate:"required"`
+// 	Country    string `json:"country" validate:"required"`
 // }
-
-type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"-"`
-}

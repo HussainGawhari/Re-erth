@@ -4,35 +4,36 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+type role string
+
+const (
+	RoleAdmin role = "admin"
+	RoleUser  role = "user"
+	RoleGuest role = "client"
 )
 
 type status string
-type role string
 
-// Enum for Status
 const (
-	StatusActive   status = "ACTIVE"
-	StatusInActive status = "INACTIVE"
-)
-
-// Enum for Role
-const (
-	RoleAdmin role = "ADMIN"
-	RoleSEO   role = "SEO"
+	StatusActive   status = "active"
+	StatusInactive status = "inactive"
 )
 
 type Users struct {
-	UserID primitive.ObjectID `bson:"_id" json:"userID"`
+	ID        string     `json:"id"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email" validate:"required"`
+	Password  string     `json:"password" validate:"required"`
+	Role      role       `json:"role" validate:"required"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
 
-	Name     string `bson:"name" json:"name"`
-	EmailID  string `bson:"emailID" json:"emailID" validate:"required"`
-	Status   status `bson:"status" json:"status"`
-	Role     role   `bson:"role" json:"role" validate:"required"`
-	Password string `bson:"password" json:"password" validate:"required"`
-
-	CreatedAt time.Time  `bson:"createdAt" json:"-"`
-	UpdatedAt *time.Time `bson:"updatedAt" json:"-"`
+type Login struct {
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type JWTClaim struct {
