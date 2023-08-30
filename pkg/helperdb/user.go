@@ -7,7 +7,6 @@ import (
 )
 
 func AddUser(user models.Users) error {
-
 	// Query executes a query that returns rows, typically a SELECT
 	_, err := DB.Exec("INSERT INTO users (name, email_id, password,role) VALUES ($1, $2, $3,$4)", user.Name, user.Email, user.Password, user.Role)
 	if err != nil {

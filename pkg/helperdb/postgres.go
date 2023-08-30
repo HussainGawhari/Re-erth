@@ -20,11 +20,14 @@ func ConnectToPostgres() (*sql.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// 	t := `
 
-	// _, err = db.Exec(t)
-	if err != nil {
-		panic(err)
-	}
+	// 	ALTER TABLE users
+	// ALTER COLUMN password TYPE VARCHAR(255);`
+	// 	_, err = db.Exec(t)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
 
 	DB = db
 

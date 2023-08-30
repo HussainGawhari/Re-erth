@@ -6,10 +6,18 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterRoutes(r *gin.Engine) {
+
+	// Configure CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"} // Update with your frontend URL
+	config.AllowMethods = []string{"GET", "POST", "OPTIONS", "DELETE", "PUT"}
+	config.AllowHeaders = []string{"Content-Type"}
+	r.Use(cors.New(config))
 	fmt.Print("Routing \n")
 	// Middleware
 	// router.Use(gin.Logger())
@@ -29,9 +37,11 @@ func RegisterRoutes(r *gin.Engine) {
 	v1.POST("/login", controller.LoginUser)
 
 	r.POST("/addclient", controller.Addclient)
-	r.GET("/getclient/:data", controller.Getclients)
-	// v1.GET("/client/:name", controller.GetClient)
-	// v1.PUT("/client/:id", controller.EditClient)
+	r.DELETE("/client/:id", controller.DeleteClient)
+	r.GET("/clients", controller.GetAllclients)
+	r.GET("/getclient", controller.Getclient)
+	r.PUT("/client/:id", controller.EditClient)
+
 	r.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"status": http.StatusNotFound, "message": "Route Not Found12",
