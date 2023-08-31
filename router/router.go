@@ -21,17 +21,19 @@ func RegisterRoutes(r *gin.Engine) {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	v1 := r.Group("/v1").Use(middlewares.Auth())
-	v1.GET("/health", controller.GetToken)
-	v1.POST("/login", controller.LoginUser)
+	r.POST("/login", controller.LoginUser)
 	r.POST("/singup", controller.CreateUser)
 	r.GET("/users", controller.GetUsers)
 
-	r.POST("/addclient", controller.Addclient)
-	r.DELETE("/client/:id", controller.DeleteClient)
-	r.GET("/clients", controller.GetAllclients)
-	r.GET("/getclient", controller.Getclient)
-	r.PUT("/client/:id", controller.EditClient)
+	v1 := r.Group("/v1").Use(middlewares.Auth())
+	{
+		v1.GET("/health", controller.GetToken)
+		v1.POST("/addclient", controller.Addclient)
+		v1.DELETE("/client/:id", controller.DeleteClient)
+		v1.GET("/clients", controller.GetAllclients)
+		v1.GET("/getclient", controller.Getclient)
+		v1.PUT("/client/:id", controller.EditClient)
+	}
 
 	r.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{

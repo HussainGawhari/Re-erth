@@ -21,14 +21,15 @@ func CheckUser(user models.Login) (string, error) {
 	fmt.Println("testing", user.Email)
 	var email string
 	var password string
-	rows, err := DB.Query("SELECT email, password FROM users where email= $1", user.Email)
+	var role string
+	rows, err := DB.Query("SELECT email, password,role FROM users where email= $1", user.Email)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	// Scan the data into variables
 	for rows.Next() {
-		err := rows.Scan(&email, &password)
+		err := rows.Scan(&email, &password, &role)
 		if err != nil {
 			panic(err)
 		}
@@ -38,7 +39,7 @@ func CheckUser(user models.Login) (string, error) {
 			return "", err
 		}
 	}
-	tokenString, err := helperjwt.GenerateJWT(email)
+	tokenString, err := helperjwt.GenerateJWT(email, password, role)
 	if err != nil {
 		return "", err
 	}
@@ -49,7 +50,7 @@ func CheckUser(user models.Login) (string, error) {
 
 func GetAllUsers() ([]models.Users, error) {
 	var users []models.Users
-	query := fmt.Sprintf("SELECT id,name,email,password,role FROM users")
+	query := "SELECT id,name,email,password,role FROM users"
 	rows, err := DB.Query(query)
 	if err != nil {
 		fmt.Println("Error executing query:", err)

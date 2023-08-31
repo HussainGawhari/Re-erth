@@ -1,6 +1,6 @@
 Here are some api I have tested during develpment
 
-1 POST: http://localhost:8000/addclient
+1 POST: http://localhost:8000/v1/addclient
 
 body{
     "first_name": "David",
@@ -36,7 +36,7 @@ Response: {
 city and/or country
 
 
-GET: http://localhost:8000/getclient?last_name=Brown
+GET: http://localhost:8000/v1/getclient?last_name=Brown
 
 Response:{
     {
@@ -63,7 +63,7 @@ Response:{
 
 3: List all client including active and inactive
 
-GET: http://localhost:8000/clients
+GET: http://localhost:8000/v1/clients
 
 Response:{
     {
@@ -160,11 +160,11 @@ Response:{
 
 4: Delete the client by ID
 
-DELETE: http://localhost:8000/client/7
+DELETE: http://localhost:8000/v1/client/7
 
 Response: CLient deleted successully
 
-5: UPDATE : http://localhost:8000/client/4
+5: UPDATE : http://localhost:8000/v1/client/4
 
 Response: 
 "message": "client updated successfully",
@@ -173,7 +173,7 @@ Response:
 
 5: Update the client using ID
 
-    PUT: http://localhost:8000/client/4
+    PUT: http://localhost:8000/v1/client/4
 
     Response: 
     {
@@ -198,7 +198,7 @@ Response:
 
 user api with authentication 
     with provided token key user should able to login
-1: POST:http://localhost:8000/v1/login?  
+1: POST:http://localhost:8000/login?  
 
     Response
     {
