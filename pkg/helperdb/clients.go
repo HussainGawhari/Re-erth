@@ -6,9 +6,6 @@ import (
 )
 
 func InsertNewCLient(c models.Clients) error {
-
-	fmt.Println("Insert results")
-	// Query executes a query that returns rows, typically a SELECT
 	result, err := DB.Exec("INSERT INTO clients (first_name, last_name, telephone, email,status,street, postal_code, city, country) VALUES ($1, $2, $3,$4, $5, $6, $7, $8, $9)",
 		c.FirstName, c.LastName, c.Telephone, c.Email, c.Status, c.Street, c.PostalCode, c.City, c.Country)
 	if err != nil {

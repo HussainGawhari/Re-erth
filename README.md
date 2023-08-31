@@ -1,4 +1,8 @@
 # Re-erth
+To run this project using docker command using
+
+        ["docker run -it client_admin"]
+
 
         CRUD Operations Completed:
         I've successfully implemented Create, Read, Update, and Delete (CRUD) operations for Ir application. This means I can now create, retrieve, update, and delete client records in  system.
@@ -19,3 +23,5 @@
         Remaining part for backend
         Input validation
         adding permision to user
+
+
