@@ -8,7 +8,7 @@ import (
 
 func AddUser(user models.Users) error {
 	// Query executes a query that returns rows, typically a SELECT
-	_, err := DB.Exec("INSERT INTO users (name, email_id, password,role) VALUES ($1, $2, $3,$4)", user.Name, user.Email, user.Password, user.Role)
+	_, err := DB.Exec("INSERT INTO users (name, email, password,role) VALUES ($1, $2, $3,$4)", user.Name, user.Email, user.Password, user.Role)
 	if err != nil {
 		fmt.Println("Err", err.Error())
 		return err
@@ -17,36 +17,61 @@ func AddUser(user models.Users) error {
 	return nil
 }
 
-func CheckUser(eval models.Login) (string, error) {
-	// Execute a query that returns data
+func CheckUser(user models.Login) (string, error) {
+	fmt.Println("testing", user.Email)
 	var email string
 	var password string
-	rows, err := DB.Query("SELECT email_id , password FROM users")
+	rows, err := DB.Query("SELECT email, password FROM users where email= $1", user.Email)
 	if err != nil {
 		panic(err)
-
 	}
 	defer rows.Close()
 	// Scan the data into variables
 	for rows.Next() {
-
 		err := rows.Scan(&email, &password)
 		if err != nil {
 			panic(err)
 		}
-		// Print the data
-		err = helperjwt.CheckPasswordWitoutHash(password, eval.Password)
+		err = helperjwt.CheckPasswordWitoutHash(password, user.Password)
 		if err != nil {
+			fmt.Print(err)
 			return "", err
 		}
-
-		// return tokenString, nil
-		// fmt.Println("verified", email, tokenString)
 	}
 	tokenString, err := helperjwt.GenerateJWT(email)
 	if err != nil {
 		return "", err
 	}
 
+	fmt.Println("pass", password, user.Password)
 	return tokenString, nil
+}
+
+func GetAllUsers() ([]models.Users, error) {
+	var users []models.Users
+	query := fmt.Sprintf("SELECT id,name,email,password,role FROM users")
+	rows, err := DB.Query(query)
+	if err != nil {
+		fmt.Println("Error executing query:", err)
+		return nil, err
+	}
+	for rows.Next() {
+		var user models.Users
+		err := rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.Password,
+			&user.Role,
+		)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	if err = rows.Err(); err != nil {
+		fmt.Println("Error retrieving data:", err)
+	}
+	return users, nil
 }

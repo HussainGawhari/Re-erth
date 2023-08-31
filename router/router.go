@@ -3,7 +3,6 @@ package router
 import (
 	"client-admin/controller"
 	"client-admin/middlewares"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -18,23 +17,15 @@ func RegisterRoutes(r *gin.Engine) {
 	config.AllowMethods = []string{"GET", "POST", "OPTIONS", "DELETE", "PUT"}
 	config.AllowHeaders = []string{"Content-Type"}
 	r.Use(cors.New(config))
-	fmt.Print("Routing \n")
 	// Middleware
-	// router.Use(gin.Logger())
-	// router.Use(gin.Recovery())
-	//Add All route
-	// Routings(router)
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	v1 := r.Group("/v1").Use(middlewares.Auth())
-	v1.GET("/test", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusAccepted, gin.H{
-			"status": http.StatusAccepted, "message": "Route Not Found10",
-		})
-	})
-
 	v1.GET("/health", controller.GetToken)
-	v1.POST("/singup", controller.CreateUser)
 	v1.POST("/login", controller.LoginUser)
+	r.POST("/singup", controller.CreateUser)
+	r.GET("/users", controller.GetUsers)
 
 	r.POST("/addclient", controller.Addclient)
 	r.DELETE("/client/:id", controller.DeleteClient)

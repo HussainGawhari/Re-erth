@@ -195,3 +195,39 @@ Response:
     "status": true
 }
 
+
+user api with authentication 
+    with provided token key user should able to login
+1: POST:http://localhost:8000/v1/login?  
+
+    Response
+    {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcnphbUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiIsImV4cCI6MTY5MzQ2MDAwN30.lt7hZjpMtiNDdzaV2ueNNx_ZwUw85XTPPDPkJE3siQc",
+    "code": 200,
+    "message": "success "
+}
+
+
+signup user 
+
+    2: POST: http://localhost:8000/singup
+
+        Response: 
+        {
+    "code": 200,
+    "data": {
+        "id": "8",
+        "name": "Arif",
+        "email": "arif@gmail.com",
+        "password": "$2a$14$VfuuSMkS7UdmDo7Oi2KfW.hiorlPol8vTkV0/Y2ruKk.bBpbhPg3K",
+        "role": "admin",
+        "created_at": "0001-01-01T00:00:00Z",
+        "updated_at": "0001-01-01T00:00:00Z"
+    },
+    "message": "success"
+} 
+
+
+return all the users in db
+3: GET :http://localhost:8000/users
+

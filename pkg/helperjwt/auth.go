@@ -16,8 +16,7 @@ var jwtKey = []byte("supersecretkey")
 func GenerateJWT(email string) (tokenString string, err error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := models.JWTClaim{
-		EmailID: email,
-
+		Email: email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -62,8 +61,15 @@ func HashPassword(user models.Users) (string, error) {
 }
 
 // check password
-func CheckPassword(providedPassword string, user models.Users) error {
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(providedPassword))
+// func CheckPassword(providedPassword string, user models.Login) error {
+// 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(providedPassword))
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
+func CheckPassword(providedPassword string, hashedPasswordFromDB string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPasswordFromDB), []byte(providedPassword))
 	if err != nil {
 		return err
 	}
