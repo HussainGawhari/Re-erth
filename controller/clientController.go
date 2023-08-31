@@ -12,10 +12,7 @@ import (
 
 // Here we can add new clients
 func Addclient(c *gin.Context) {
-	fmt.Println(" creating client")
-	fmt.Print("Some body wants to add")
 	var client models.Clients
-	// fmt.Println(client)
 	if err := c.ShouldBindJSON(&client); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON data"})
 		return

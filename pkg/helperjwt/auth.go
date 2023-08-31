@@ -20,7 +20,7 @@ func GenerateJWT(email, pass, role string) (tokenString string, err error) {
 		Password: pass,
 		Role:     role,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+			ExpiresAt: expirationTime.Add(24 * time.Hour).Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

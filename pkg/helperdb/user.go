@@ -18,7 +18,6 @@ func AddUser(user models.Users) error {
 }
 
 func CheckUser(user models.Login) (string, error) {
-	fmt.Println("testing", user.Email)
 	var email string
 	var password string
 	var role string
@@ -44,13 +43,12 @@ func CheckUser(user models.Login) (string, error) {
 		return "", err
 	}
 
-	fmt.Println("pass", password, user.Password)
 	return tokenString, nil
 }
 
 func GetAllUsers() ([]models.Users, error) {
 	var users []models.Users
-	query := "SELECT id,name,email,password,role FROM users"
+	query := fmt.Sprintf("SELECT id,name,email,password,role FROM users")
 	rows, err := DB.Query(query)
 	if err != nil {
 		fmt.Println("Error executing query:", err)

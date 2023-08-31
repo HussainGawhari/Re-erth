@@ -14,7 +14,7 @@ func RegisterRoutes(r *gin.Engine) {
 	// Configure CORS middleware
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"} // Update with your frontend URL
-	config.AllowMethods = []string{"GET", "POST", "OPTIONS", "DELETE", "PUT"}
+	config.AllowMethods = []string{"*", "GET", "POST", "OPTIONS", "DELETE", "PUT"}
 	config.AllowHeaders = []string{"Content-Type"}
 	r.Use(cors.New(config))
 	// Middleware
