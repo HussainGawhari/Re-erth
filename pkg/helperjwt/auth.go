@@ -13,10 +13,12 @@ import (
 var jwtKey = []byte("supersecretkey")
 
 // Generate JWT Token
-func GenerateJWT(email string) (tokenString string, err error) {
+func GenerateJWT(email, pass, role string) (tokenString string, err error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := models.JWTClaim{
-		Email: email,
+		Email:    email,
+		Password: pass,
+		Role:     role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
