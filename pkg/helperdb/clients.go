@@ -61,8 +61,6 @@ func ListClient(query string) ([]models.Clients, error) {
 }
 
 func DeleteInDb(id int) error {
-
-	// Execute the DELETE statement
 	row := DB.QueryRow("SELECT id FROM clients WHERE id = ?", id)
 	var idFromDb int
 	err := row.Scan(&idFromDb)
@@ -70,39 +68,30 @@ func DeleteInDb(id int) error {
 		fmt.Print("ID does not exist in DB")
 		return err
 	}
-
 	fmt.Println("this is i ", idFromDb)
-
 	stmt, err := DB.Prepare("DELETE FROM clients WHERE id = $1")
 	if err != nil {
 		fmt.Print(err)
 		return err
 	}
 	defer stmt.Close()
-
-	// Execute the prepared statement to delete the clients
 	_, err = stmt.Exec(id)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func Clients(pageSize, offset int) ([]models.Clients, error) {
-
 	var clients []models.Clients
 	query := fmt.Sprintf("SELECT * FROM clients WHERE status = TRUE ORDER BY first_name ASC LIMIT %d OFFSET %d", pageSize, offset)
-
 	rows, err := DB.Query(query)
 	if err != nil {
 		fmt.Println("Error executing query:", err)
 		return nil, err
 	}
-
 	for rows.Next() {
 		var client models.Clients
-
 		err := rows.Scan(
 			&client.ID,
 			&client.FirstName,
@@ -128,7 +117,6 @@ func Clients(pageSize, offset int) ([]models.Clients, error) {
 		fmt.Println("Error retrieving data:", err)
 	}
 	return clients, nil
-
 }
 
 func Update(newClient models.Clients, id int) error {

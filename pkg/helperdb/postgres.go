@@ -23,11 +23,13 @@ func ConnectToPostgres() (*sql.DB, error) {
 	// 	t := `
 
 	// 	ALTER TABLE users
-	// ALTER COLUMN password TYPE VARCHAR(255);`
+	// RENAME COLUMN email_id TO email;
+
+	// 	`
 	// 	_, err = db.Exec(t)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
+	if err != nil {
+		panic(err)
+	}
 
 	DB = db
 

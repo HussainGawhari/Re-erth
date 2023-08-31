@@ -17,7 +17,6 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 	// fmt.Println("user details", user.Name, user.Email)
-
 	user := models.Users{
 
 		Name:      doc.Name,
@@ -49,25 +48,27 @@ func CreateUser(c *gin.Context) {
 }
 
 func LoginUser(c *gin.Context) {
-	var validate models.Login
+	var document models.Login
 	fmt.Println(" checking user")
-	if err := c.ShouldBindJSON(&validate); err != nil {
+	if err := c.ShouldBindJSON(&document); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON data"})
 		return
 	}
-	fmt.Println("user details", validate.Email, validate.Password)
-
-	token, err := helperdb.CheckUser(validate)
+	user := models.Login{
+		Email:    document.Email,
+		Password: document.Password,
+	}
+	// fmt.Println("user details", validate.Email, validate.Password)
+	token, err := helperdb.CheckUser(user)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	c.JSONP(http.StatusOK, gin.H{
 		"code":    200,
-		"message": "success",
+		"message": "success ",
 		"Token":   token,
 	})
-
 }
 
 func GetToken(c *gin.Context) {
@@ -75,5 +76,18 @@ func GetToken(c *gin.Context) {
 	c.JSONP(http.StatusOK, gin.H{
 		"code":    200,
 		"message": "success",
+	})
+}
+
+func GetUsers(c *gin.Context) {
+	users, err := helperdb.GetAllUsers()
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	c.JSONP(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "success",
+		"data":    users,
 	})
 }
