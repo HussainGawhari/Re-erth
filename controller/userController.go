@@ -48,17 +48,13 @@ func CreateUser(c *gin.Context) {
 }
 
 func LoginUser(c *gin.Context) {
-	var document models.Login
+	var user models.Login
 	fmt.Println(" checking user")
-	if err := c.ShouldBindJSON(&document); err != nil {
+	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON data"})
 		return
 	}
-	user := models.Login{
-		Email:    document.Email,
-		Password: document.Password,
-	}
-	// fmt.Println("user details", validate.Email, validate.Password)
+
 	token, err := helperdb.CheckUser(user)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)

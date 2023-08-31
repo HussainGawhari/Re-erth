@@ -58,7 +58,7 @@ func ListClient(query string) ([]models.Clients, error) {
 }
 
 func DeleteInDb(id int) error {
-	row := DB.QueryRow("SELECT id FROM clients WHERE id = ?", id)
+	row := DB.QueryRow("SELECT id FROM clients WHERE id = $1", id)
 	var idFromDb int
 	err := row.Scan(&idFromDb)
 	if err != nil {

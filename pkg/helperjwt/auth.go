@@ -45,6 +45,7 @@ func ValidateToken(signedToken string) (err error) {
 		err = errors.New("couldn't parse claims")
 		return
 	}
+
 	if claims.ExpiresAt < time.Now().Local().Unix() {
 		err = errors.New("token expired")
 		return
@@ -63,21 +64,15 @@ func HashPassword(user models.Users) (string, error) {
 }
 
 // check password
-// func CheckPassword(providedPassword string, user models.Login) error {
-// 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(providedPassword))
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-func CheckPassword(providedPassword string, hashedPasswordFromDB string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPasswordFromDB), []byte(providedPassword))
+func CheckPassword(dbPass string, user models.Login) error {
+	err := bcrypt.CompareHashAndPassword([]byte(dbPass), []byte(user.Password))
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
+// check password without hashed
 func CheckPasswordWitoutHash(providedPassword string, password string) error {
 	if password != providedPassword {
 		return errors.New("password not valid")

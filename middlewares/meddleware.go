@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"client-admin/pkg/helperjwt"
+	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,12 +16,18 @@ func Auth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		err := helperjwt.ValidateToken(tokenString)
-		if err != nil {
-			context.JSON(401, "Invalid Token")
-			context.Abort()
-			return
+
+		bearerToken := strings.Split(tokenString, "Bearer ")
+		if len(bearerToken) != 2 {
+			context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid bearer token format"})
+
+			err := helperjwt.ValidateToken(tokenString)
+			if err != nil {
+				context.JSON(401, "Invalid Token")
+				context.Abort()
+				return
+			}
+			context.Next()
 		}
-		context.Next()
 	}
 }

@@ -15,15 +15,11 @@ func RegisterRoutes(r *gin.Engine) {
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"} // Update with your frontend URL
 	config.AllowMethods = []string{"*", "GET", "POST", "OPTIONS", "DELETE", "PUT"}
-	config.AllowHeaders = []string{"Content-Type"}
+	config.AllowHeaders = []string{"Authorization", "Content-Type"}
 	r.Use(cors.New(config))
 	// Middleware
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-
-	r.POST("/login", controller.LoginUser)
-	r.POST("/singup", controller.CreateUser)
-	r.GET("/users", controller.GetUsers)
 
 	v1 := r.Group("/v1").Use(middlewares.Auth())
 	{
@@ -31,9 +27,12 @@ func RegisterRoutes(r *gin.Engine) {
 		v1.POST("/addclient", controller.Addclient)
 		v1.DELETE("/client/:id", controller.DeleteClient)
 		v1.GET("/clients", controller.GetAllclients)
-		v1.GET("/getclient", controller.Getclient)
+		v1.GET("/getclient/:data", controller.Getclient)
 		v1.PUT("/client/:id", controller.EditClient)
 	}
+	r.POST("/login", controller.LoginUser)
+	r.POST("/singup", controller.CreateUser)
+	r.GET("/users", controller.GetUsers)
 
 	r.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
