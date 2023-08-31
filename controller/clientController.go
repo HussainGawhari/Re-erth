@@ -63,19 +63,16 @@ func Getclient(c *gin.Context) {
 // THis function will delete the client by ID
 func DeleteClient(c *gin.Context) {
 	clientID := c.Param("id")
-	// Ensure that the client ID is a valid integer
 	id, err := strconv.Atoi(clientID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid client ID"})
 		return
 	}
-	// Perform the deletion operation in the database based on the client ID
 	err = helperdb.DeleteInDb(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete client"})
 		return
 	}
-	// Return a success response
 	c.JSON(http.StatusOK, gin.H{"message": "client deleted successfully"})
 }
 
@@ -83,8 +80,7 @@ func DeleteClient(c *gin.Context) {
 func GetAllclients(c *gin.Context) {
 
 	page := c.DefaultQuery("page", "1")
-	pageSize := c.DefaultQuery("page_size", "10")
-
+	pageSize := c.DefaultQuery("page_size", "100")
 	pageInt, _ := strconv.Atoi(page)
 	pageSizeInt, _ := strconv.Atoi(pageSize)
 	offset := (pageInt - 1) * pageSizeInt

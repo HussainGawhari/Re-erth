@@ -13,7 +13,6 @@ func AddUser(user models.Users) error {
 		fmt.Println("Err", err.Error())
 		return err
 	}
-
 	return nil
 }
 
@@ -21,7 +20,7 @@ func CheckUser(user models.Login) (string, error) {
 	var email string
 	var password string
 	var role string
-	rows, err := DB.Query("SELECT email, password,role FROM users where email= $1", user.Email)
+	rows, err := DB.Query("SELECT email, password,role FROM users where email = $1", user.Email)
 	if err != nil {
 		panic(err)
 	}
@@ -32,24 +31,24 @@ func CheckUser(user models.Login) (string, error) {
 		if err != nil {
 			panic(err)
 		}
-		err = helperjwt.CheckPasswordWitoutHash(password, user.Password)
+		err = helperjwt.CheckPassword(password, user)
 		if err != nil {
 			fmt.Print(err)
 			return "", err
 		}
 	}
+
 	tokenString, err := helperjwt.GenerateJWT(email, password, role)
 	if err != nil {
 		return "", err
 	}
-
 	return tokenString, nil
 }
 
+// To get all users from database using this funtion
 func GetAllUsers() ([]models.Users, error) {
 	var users []models.Users
-	query := fmt.Sprintf("SELECT id,name,email,password,role FROM users")
-	rows, err := DB.Query(query)
+	rows, err := DB.Query("SELECT id,name,email,password,role FROM users")
 	if err != nil {
 		fmt.Println("Error executing query:", err)
 		return nil, err
