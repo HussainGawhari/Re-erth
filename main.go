@@ -17,7 +17,6 @@ func main() {
 		return
 	}
 	defer db.Close()
-
 	r := gin.New()
 	router.RegisterRoutes(r)
 

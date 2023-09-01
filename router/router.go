@@ -29,6 +29,8 @@ func RegisterRoutes(r *gin.Engine) {
 		v1.GET("/clients", controller.GetAllclients)
 		v1.GET("/getclient/:data", controller.Getclient)
 		v1.PUT("/client/:id", controller.EditClient)
+		v1.GET("/count", controller.CountClients)
+		v1.GET("/clienthistory", controller.ClientHistory)
 	}
 	r.POST("/login", controller.LoginUser)
 	r.POST("/singup", controller.CreateUser)

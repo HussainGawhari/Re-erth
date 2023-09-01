@@ -123,3 +123,33 @@ func EditClient(c *gin.Context) {
 		"data":    client,
 	})
 }
+
+func CountClients(c *gin.Context) {
+	total, err := helperdb.CountAllClient()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error number of client"})
+		return
+	}
+	// Return a success response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "This is the numbers all client ",
+		"status":  true,
+		"data":    total,
+	})
+}
+func ClientHistory(c *gin.Context) {
+	rs, err := helperdb.ClientHistoryData()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error getting of client"})
+		return
+	}
+	// Return a success response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "This is the history all client ",
+		"status":  true,
+		"data":    rs,
+	})
+}

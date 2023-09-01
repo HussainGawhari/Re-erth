@@ -20,17 +20,6 @@ func ConnectToPostgres() (*sql.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// 	t := `
-
-	// 	ALTER TABLE users
-	// RENAME COLUMN email_id TO email;
-
-	// 	`
-	// 	_, err = db.Exec(t)
-	if err != nil {
-		panic(err)
-	}
-
 	DB = db
 
 	return db, nil
