@@ -6,14 +6,13 @@ import (
 )
 
 func InsertNewCLient(c models.Clients) error {
-	result, err := DB.Exec("INSERT INTO clients (first_name, last_name, telephone, email,status,street, postal_code, city, country) VALUES ($1, $2, $3,$4, $5, $6, $7, $8, $9)",
+	_, err := DB.Exec("INSERT INTO clients (first_name, last_name, telephone, email,status,street, postal_code, city, country) VALUES ($1, $2, $3,$4, $5, $6, $7, $8, $9)",
 		c.FirstName, c.LastName, c.Telephone, c.Email, c.Status, c.Street, c.PostalCode, c.City, c.Country)
 	if err != nil {
 		fmt.Println("Err", err.Error())
 		return err
 	}
-	fmt.Println(result)
-
+	ClientHistoryData()
 	return nil
 
 }
@@ -76,6 +75,7 @@ func DeleteInDb(id int) error {
 	if err != nil {
 		return err
 	}
+	ClientHistoryData()
 	return nil
 }
 
@@ -135,7 +135,54 @@ func Update(newClient models.Clients, id int) error {
 	if err != nil {
 		return err
 	}
-
+	ClientHistoryData()
 	return nil
 
+}
+
+func CountAllClient() (int, error) {
+	var totalRecords int
+	err := DB.QueryRow("SELECT COUNT(id) FROM clients").Scan(&totalRecords)
+	if err != nil {
+		return 0, err
+	}
+
+	return totalRecords, nil
+}
+
+func ClientHistoryData() ([]models.ClientsHistory, error) {
+	var clients_history []models.ClientsHistory
+	rows, err := DB.Query("SELECT * FROM clients_history")
+	if err != nil {
+		fmt.Println("Error executing query:", err)
+		return nil, err
+	}
+	for rows.Next() {
+		var client models.ClientsHistory
+		err := rows.Scan(
+			&client.ID,
+			&client.ClientID,
+			&client.FirstName,
+			&client.LastName,
+			&client.Telephone,
+			&client.Email,
+			&client.Status,
+			&client.Street,
+			&client.PostalCode,
+			&client.City,
+			&client.Country,
+			&client.CreatedAt,
+			&client.UpdatedAt,
+		)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			return nil, err
+		}
+
+		clients_history = append(clients_history, client)
+	}
+	if err = rows.Err(); err != nil {
+		fmt.Println("Error retrieving data:", err)
+	}
+	return clients_history, nil
 }

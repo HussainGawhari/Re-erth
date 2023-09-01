@@ -19,10 +19,13 @@ To run this project using docker command using
         User Authentication Completed:
         I've successfully implemented user authentication, allowing users to securely log into Ir application. This is a crucial aspect of security and access control, ensuring that only authorized users can perform certain actions.
 
+        Cient history update
+        this one under progress
+
 
         Remaining part for backend
         Input validation
         adding permision to user
-        history update
+        active and deactive
 
 
