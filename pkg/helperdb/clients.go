@@ -2,6 +2,7 @@ package helperdb
 
 import (
 	"client-admin/models"
+	"errors"
 	"fmt"
 )
 
@@ -64,7 +65,7 @@ func DeleteInDb(id int) error {
 		fmt.Print("ID does not exist in DB")
 		return err
 	}
-	fmt.Println("this is i ", idFromDb)
+
 	stmt, err := DB.Prepare("DELETE FROM clients WHERE id = $1")
 	if err != nil {
 		fmt.Print(err)
@@ -185,4 +186,26 @@ func ClientHistoryData() ([]models.ClientsHistory, error) {
 		fmt.Println("Error retrieving data:", err)
 	}
 	return clients_history, nil
+}
+
+func ChangeStatus(id int) error {
+	row := DB.QueryRow("SELECT status FROM clients WHERE id = $1", id)
+	var statusFromDB bool
+	err := row.Scan(&statusFromDB)
+	if err != nil {
+		return errors.New("error in querying client")
+	}
+
+	// Update the status value
+	statusFromDB = !statusFromDB
+
+	query := "UPDATE clients SET status = $1 WHERE id = $2"
+	_, err = DB.Exec(query, statusFromDB, id)
+
+	if err != nil {
+		fmt.Println("Error updating the status:", err)
+		return err
+	}
+	ClientHistoryData()
+	return nil
 }

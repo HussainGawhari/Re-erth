@@ -3,6 +3,7 @@ package helperjwt
 import (
 	"client-admin/models"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,14 +14,13 @@ import (
 var jwtKey = []byte("supersecretkey")
 
 // Generate JWT Token
-func GenerateJWT(email, pass, role string) (tokenString string, err error) {
+func GenerateJWT(email, role string) (tokenString string, err error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := models.JWTClaim{
-		Email:    email,
-		Password: pass,
-		Role:     role,
+		Email: email,
+		Role:  role,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Add(24 * time.Hour).Unix(),
+			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -28,7 +28,7 @@ func GenerateJWT(email, pass, role string) (tokenString string, err error) {
 	return
 }
 
-// Validate token
+// Validate token for admin
 func ValidateToken(signedToken string) (err error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
@@ -38,19 +38,54 @@ func ValidateToken(signedToken string) (err error) {
 		},
 	)
 	if err != nil {
-		return
+		return errors.New("the token is not valid")
+
 	}
 	claims, ok := token.Claims.(*models.JWTClaim)
+
 	if !ok {
-		err = errors.New("couldn't parse claims")
-		return
+		err := errors.New("couldn't parse claims")
+		return err
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		err = errors.New("token expired")
-		return
+		err := errors.New("token expired")
+		return err
 	}
-	return
+	role := claims.Role
+	fmt.Println("this is role: ", role)
+	if role == "user" {
+		// Create a permission error
+		err := errors.New("you don't have permission to access this resource")
+		return err
+	}
+	return nil
+}
+
+// Validate token for the users
+func ValidateTokenUserRole(signedToken string) (err error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&models.JWTClaim{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtKey), nil
+		},
+	)
+	if err != nil {
+		return errors.New("provided token is not valid")
+	}
+	claims, ok := token.Claims.(*models.JWTClaim)
+
+	if !ok {
+		err := errors.New("couldn't parse the claims")
+		return err
+	}
+
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		err := errors.New("token expired")
+		return err
+	}
+	return nil
 }
 
 // Hash user password

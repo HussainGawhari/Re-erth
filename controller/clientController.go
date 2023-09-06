@@ -31,21 +31,20 @@ func Addclient(c *gin.Context) {
 
 // This function returns clients by last name, city, country, and so on..
 func Getclient(c *gin.Context) {
+
 	query := "SELECT * FROM clients WHERE"
-	params := c.Request.URL.Query()
-	fmt.Print(params)
 	// Retrieve query parameters
-	if lastName := c.Query("last_name"); lastName != "" {
+	if lastName := c.DefaultQuery("last_name", "jan"); lastName != "" {
 		query += fmt.Sprintf(" last_name = '%s'", lastName)
 	}
 	if postalCode := c.Query("postal_code"); postalCode != "" {
-		query += fmt.Sprintf(" postal_code = '%s'", postalCode)
+		query += fmt.Sprintf("and postal_code = '%s'", postalCode)
 	}
 	if city := c.Query("city"); city != "" {
-		query += fmt.Sprintf(" city = '%s'", city)
+		query += fmt.Sprintf("and city = '%s'", city)
 	}
 	if country := c.Query("country"); country != "" {
-		query += fmt.Sprintf(" country = '%s'", country)
+		query += fmt.Sprintf(" and country = '%s'", country)
 	}
 	fmt.Println(query)
 	clients, err := helperdb.ListClient(query)
@@ -80,7 +79,7 @@ func DeleteClient(c *gin.Context) {
 func GetAllclients(c *gin.Context) {
 
 	page := c.DefaultQuery("page", "1")
-	pageSize := c.DefaultQuery("page_size", "100")
+	pageSize := c.DefaultQuery("page_size", "10")
 	pageInt, _ := strconv.Atoi(page)
 	pageSizeInt, _ := strconv.Atoi(pageSize)
 	offset := (pageInt - 1) * pageSizeInt
@@ -151,5 +150,28 @@ func ClientHistory(c *gin.Context) {
 		"message": "This is the history all client ",
 		"status":  true,
 		"data":    rs,
+	})
+}
+
+func ActivateDeactivat(c *gin.Context) {
+
+	clientID := c.Param("id")
+	// Ensure that the client ID is a valid integer
+	id, err := strconv.Atoi(clientID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid client ID"})
+		return
+	}
+
+	// Update the client's status in the database
+	err = helperdb.ChangeStatus(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error updating client"})
+		return
+	}
+	// Return a success response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "client status updated successfully",
 	})
 }
