@@ -19,11 +19,11 @@ To run this project using docker command using
         User Authentication Completed:
         I've successfully implemented user authentication, allowing users to securely log into Ir application. This is a crucial aspect of security and access control, ensuring that only authorized users can perform certain actions.
 
-        Cient history update
-        this one under progress completed
+       Client History Updates:
+        Client history updates are valuable for tracking changes and interactions with clients. This feature can provide a historical record of actions taken, which can be useful for auditing, troubleshooting, and analytics.
 
-        client activation and devaction completed
-
+        Client Activation and Deactivation:
+        Client activation and deactivation features are essential for managing client accounts or entities within your application. Activation allows clients to use your services, while deactivation can restrict access or suspend an account when necessary.
 
         
 
