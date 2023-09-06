@@ -38,7 +38,8 @@ func CheckUser(user models.Login) (string, error) {
 		}
 	}
 
-	tokenString, err := helperjwt.GenerateJWT(email, password, role)
+	fmt.Printf("testing \t %s, with role  %s  \t       ", email, role)
+	tokenString, err := helperjwt.GenerateJWT(email, role)
 	if err != nil {
 		return "", err
 	}

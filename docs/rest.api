@@ -36,7 +36,7 @@ Response: {
 city and/or country
 
 
-GET: http://localhost:8000/v1/getclient?last_name=Brown
+GET: http://localhost:8000/v2/getclient?last_name=Brown
 
 Response:{
     {
@@ -63,7 +63,7 @@ Response:{
 
 3: List all client including active and inactive
 
-GET: http://localhost:8000/v1/clients
+GET: http://localhost:8000/v2/clients
 
 Response:{
     {
@@ -164,11 +164,6 @@ DELETE: http://localhost:8000/v1/client/7
 
 Response: CLient deleted successully
 
-5: UPDATE : http://localhost:8000/v1/client/4
-
-Response: 
-"message": "client updated successfully",
-    "status": true
 
 
 5: Update the client using ID

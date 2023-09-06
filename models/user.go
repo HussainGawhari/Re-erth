@@ -11,7 +11,6 @@ type role string
 const (
 	RoleAdmin role = "admin"
 	RoleUser  role = "user"
-	RoleGuest role = "client"
 )
 
 type status string
