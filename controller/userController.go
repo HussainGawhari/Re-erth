@@ -55,8 +55,12 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
-	token, err := helperdb.CheckUser(user)
+	token, role, err := helperdb.CheckUser(user)
 	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	if role == "" {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -64,6 +68,7 @@ func LoginUser(c *gin.Context) {
 		"code":    200,
 		"message": "success ",
 		"Token":   token,
+		"Roles":   role,
 	})
 }
 

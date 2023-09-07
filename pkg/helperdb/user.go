@@ -16,34 +16,34 @@ func AddUser(user models.Users) error {
 	return nil
 }
 
-func CheckUser(user models.Login) (string, error) {
+func CheckUser(user models.Login) (string, string, error) {
 	var email string
 	var password string
 	var role string
-	rows, err := DB.Query("SELECT email, password,role FROM users where email = $1", user.Email)
+	rows, err := DB.Query("SELECT email, password,role FROM users where email = $1 ", user.Email)
 	if err != nil {
-		panic(err)
+		return "", "", err
 	}
 	defer rows.Close()
 	// Scan the data into variables
 	for rows.Next() {
 		err := rows.Scan(&email, &password, &role)
 		if err != nil {
-			panic(err)
+			return "", "", err
 		}
 		err = helperjwt.CheckPassword(password, user)
 		if err != nil {
 			fmt.Print(err)
-			return "", err
+			return "", "", err
 		}
 	}
 
 	fmt.Printf("testing \t %s, with role  %s  \t       ", email, role)
 	tokenString, err := helperjwt.GenerateJWT(email, role)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return tokenString, nil
+	return tokenString, role, nil
 }
 
 // To get all users from database using this funtion

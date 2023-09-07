@@ -175,3 +175,29 @@ func ActivateDeactivat(c *gin.Context) {
 		"message": "client status updated successfully",
 	})
 }
+
+func GetClientBasedID(c *gin.Context) {
+	clientID := c.Param("id")
+	// Ensure that the client ID is a valid integer
+	id, err := strconv.Atoi(clientID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid client ID"})
+		return
+	}
+
+	result, err := helperdb.GetClient(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "could not find the client",
+			"status":  "404",
+		})
+		return
+	}
+
+	// Return a success response to user
+	c.JSON(http.StatusOK, gin.H{
+		"messsage": "success",
+		"data":     result,
+		"status":   200,
+	})
+}

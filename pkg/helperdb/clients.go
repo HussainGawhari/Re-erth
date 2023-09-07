@@ -209,3 +209,34 @@ func ChangeStatus(id int) error {
 	ClientHistoryData()
 	return nil
 }
+
+func GetClient(id int) ([]models.Clients, error) {
+	var clients []models.Clients
+	rows, err := DB.Query("SELECT * FROM clients WHERE id = $1", id)
+	if err != nil {
+		return clients, errors.New("can find your client")
+	}
+	for rows.Next() {
+		var client models.Clients
+		err := rows.Scan(
+			&client.ID,
+			&client.FirstName,
+			&client.LastName,
+			&client.Telephone,
+			&client.Email,
+			&client.Status,
+			&client.Street,
+			&client.PostalCode,
+			&client.City,
+			&client.Country,
+			&client.CreatedAt,
+			&client.UpdatedAt)
+		if err != nil {
+			return clients, err
+		}
+
+		clients = append(clients, client)
+	}
+	return clients, nil
+
+}
