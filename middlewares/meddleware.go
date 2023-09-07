@@ -15,8 +15,6 @@ func Auth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-
-		fmt.Print("testing auth   \t")
 		err := helperjwt.ValidateToken(tokenString)
 		fmt.Println(err)
 		if err != nil {

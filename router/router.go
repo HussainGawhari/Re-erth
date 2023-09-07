@@ -24,20 +24,20 @@ func RegisterRoutes(r *gin.Engine) {
 	v1 := r.Group("/v1").Use(middlewares.Auth())
 	{
 		v1.POST("/addclient", controller.Addclient)
-		v1.DELETE("/client/:id", controller.DeleteClient)
-		v1.PUT("/client/:id", controller.EditClient)
-		v1.PUT("toggle/:id", controller.ActivateDeactivat)
-		v1.GET("/getclient/:data", controller.Getclient)
+		v1.DELETE("/client/:id", controller.DeleteClient)   //delete based on ID
+		v1.PUT("/client/:id", controller.EditClient)        //update based on ID
+		v1.PUT("/toggle/:id", controller.ActivateDeactivat) // This route can change the client to active and deactive
+		v1.GET("/details/:id", controller.GetClientBasedID) //Get based on ID of client and display the details
 
 	}
 	// Authentication for user's
 	v2 := r.Group("/v2").Use(middlewares.AuthForUsers())
 	{
 		v2.GET("/health", controller.GetToken)
-		v2.GET("/clients", controller.GetAllclients)
-		v2.GET("/getclient/", controller.Getclient)
-		v2.GET("/count", controller.CountClients)
-		v2.GET("/clienthistory", controller.ClientHistory)
+		v2.GET("/clients", controller.GetAllclients)       //returns all the client which are actives
+		v2.GET("/getclient/", controller.Getclient)        // this rout can search for the client based on last name, country,postal code,city and so on..
+		v2.GET("/count", controller.CountClients)          // return the number of client in DB
+		v2.GET("/clienthistory", controller.ClientHistory) // return history of the client
 
 	}
 	// User's signup and login routes

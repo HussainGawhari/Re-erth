@@ -3,7 +3,6 @@ package helperjwt
 import (
 	"client-admin/models"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -53,7 +52,6 @@ func ValidateToken(signedToken string) (err error) {
 		return err
 	}
 	role := claims.Role
-	fmt.Println("this is role: ", role)
 	if role == "user" {
 		// Create a permission error
 		err := errors.New("you don't have permission to access this resource")
